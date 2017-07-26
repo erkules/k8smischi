@@ -1,0 +1,51 @@
+- hosts: all
+  gather_facts: no
+  vars_files: 
+  - vars.yml
+
+  tasks:
+#j  - name: pull hyperkube
+#j    raw:  docker pull "{{ item  }}"
+#j    with_items:
+#j    - "{{ hyperkube }}"
+#j    - "{{ pythonimage }}"
+#j    - "{{ etcdimage }}"
+  - name: Create /opt/bin
+    raw:  mkdir -p "{{ item }}" || true
+    with_items: "{{ directories }}"
+  - name: Create /opt/bin
+    raw:  "chown core: {{ item }}" 
+    with_items: "{{ directories }}"
+  - name: extract hyperkube
+    raw: docker run --rm -v /opt/bin:/srv {{ hyperkube }} mv /hyperkube /srv/
+
+- hosts: all
+  gather_facts: no
+  vars_files: 
+  - vars.yml
+  serial: 1
+  tasks:
+  - name: Copy kubelet.service
+    raw:  scp kubelet.service core@"{{ hostvars[item]['ansible_host'] }}":/tmp/kubelet.service
+    with_items: "{{ groups['all'] }}"
+    delegate_to: 127.0.0.1
+
+  - name: Copy manifests templates
+    template:  
+      src: manifesttemplates/{{ item }}
+      dest: /etc/kubernetes/manifests/{{ item }}
+    with_items: "{{ manifests }}"
+
+- hosts: all
+  gather_facts: no
+  vars:
+    ansible_ssh_user: core
+    ansible_python_interpreter: "/opt/python/bin/python"
+    hyperkube: "quay.io/coreos/hyperkube:v1.6.7_coreos.0"
+    pythonimage: "python:2-alpine"
+  tasks:
+  - name: Copy Kubelet Server to /etc/systemd/system/kubelet.service
+    raw:  mv /tmp/kubelet.service /etc/systemd/system/kubelet.service
+  - raw: systemctl daemon-reload
+  - raw: systemctl restart kubelet 
+

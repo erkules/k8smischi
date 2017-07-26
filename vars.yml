@@ -1,0 +1,16 @@
+ansible_ssh_user: core
+ansible_python_interpreter: "/opt/python/bin/python"
+hyperkube:  "quay.io/coreos/hyperkube:v1.6.7_coreos.0"
+pythonimage: "python:2-alpine"
+etcdimage:   "quay.io/coreos/etcd:v3.1.8"
+manifests:                                                                                                                                        
+- apiserver.pod
+directories:                                                                                                                                      
+- /opt/bin
+- /etc/kubernetes/manifests
+- /etc/kubernetes/cni/net.d
+
+- python_url: "http://downloads.activestate.com/ActivePython/releases/2.7.13.2714/ActivePython-2.7.13.2714-linux-x86_64-glibc-2.12-402178.tar.gz"
+etcd_discovery_token: "https://discovery.etcd.io/3107ab328565a830750e14e751fc4229"
+
+kubernetes_cluster_range: "10.30.10.0/24"

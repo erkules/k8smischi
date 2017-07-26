@@ -1,0 +1,15 @@
+[Service]
+ExecStartPre=-/usr/bin/mkdir -p /etc/kubernetes/manifests
+ExecStart=/opt/bin/hyperkube kubelet --pod-manifest-path /etc/kubernetes/manifests --allow-privileged true  \
+   --api-servers=http://127.0.0.1:8080 \
+   --register-schedulable=false \
+   --cni-conf-dir=/etc/kubernetes/cni/net.d \
+   --container-runtime=docker \
+   --allow-privileged=true \
+   --pod-manifest-path=/etc/kubernetes/manifests 
+ #  --network-plugin=${NETWORK_PLUGIN} \
+  # --hostname-override=${ADVERTISE_IP} \
+  # --cluster_dns=${DNS_SERVICE_IP} \
+  # --cluster_domain=cluster.local
+Restart=always
+RestartSec=10
