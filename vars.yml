@@ -17,4 +17,5 @@ python_url: "http://downloads.activestate.com/ActivePython/releases/2.7.13.2714/
 
 kubernetes_cluster_range: "10.30.10.0/24"
 kubernetes_apiserver_ip: "10.30.10.1"
+kubernetes_dns_ip:        "10.30.10.11"
 apiserver_count: 3
