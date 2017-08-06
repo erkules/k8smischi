@@ -1,0 +1,45 @@
+---
+- name: Install Docker Package
+  apt: 
+    name:         docker.io
+    update_cache: yes
+    state:        present
+
+- name: Create Config Dir For Docker
+  file:
+    path:       /etc/systemd/system/docker.service.d
+    owner:      root
+    group:      root
+    state:       directory
+
+- name: Write Docker Proxy Config
+  template:
+    src:         proxy.j2
+    dest:        /etc/systemd/system/docker.service.d/proxy.conf
+  register:      restartdocker
+
+- name: Ensure Docker is starts after reboot
+  command: systemctl enable docker
+#  systemd:
+#    name:         systemd.service
+#    enabled:      yes
+
+- name: Reload Config (if changed)
+  command: systemctl daemon-reload
+#  systemd:
+#    name:          systemd.service
+#    state:         restarted
+#    daemon_reload: yes
+  when: restartdocker|changed
+
+- name: Reload Config (if changed)
+  command: systemctl restart docker
+#  systemd:
+#    name:          systemd.service
+#    state:         restarted
+#    daemon_reload: yes
+  when: restartdocker|changed
+
+- name: Ensure Docker is startet
+  command: systemctl start docker
+
