@@ -23,7 +23,7 @@
       state: link
   - name: Install Certs
     copy: 
-      src: "{{ item }}"
+      src: "certs/{{ item }}"
       dest: "/etc/kubernetes/ssl/{{ item }}"
     with_items:
     - ca.pem
