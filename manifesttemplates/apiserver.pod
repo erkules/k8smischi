@@ -42,4 +42,11 @@ spec:
     - containerPort: 8080
       hostPort: 8080
       name: local
+    VolumeMounts:
+    - mountPath: /etc/kubernetes/ssl
+      name: ssl
+  volumes:
+  - name: ssl
+    hostPath:
+      path: /etc/kubernetes/ssl
 

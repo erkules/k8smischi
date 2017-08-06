@@ -25,3 +25,11 @@ spec:
         port: 10251
       initialDelaySeconds: 15
       timeoutSeconds: 15
+    VolumeMounts:
+    - mountPath: /etc/kubernetes/ssl
+      name: ssl
+  volumes:
+  - name: ssl
+    hostPath:
+      path: /etc/kubernetes/ssl
+
