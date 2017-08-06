@@ -4,14 +4,15 @@
   - vars.yml
 
   tasks:
-#j  - name: pull hyperkube
-#j    raw:  docker pull "{{ item  }}"
-#j    with_items:
-#j    - "{{ hyperkube }}"
-#j    - "{{ pythonimage }}"
-#j    - "{{ etcdimage }}"
-  - name: Create /opt/bin
-    raw:  mkdir -p "{{ item }}" || true
+  - name: pull hyperkube
+    raw:  docker pull "{{ item  }}"
+    with_items:
+    - "{{ hyperkube }}"
+    - "{{ etcdimage }}"
+  - name: Create directories for Kubernetes Kubelet
+    file:
+      dest: "{{ item }}"
+      state: directory
     with_items: "{{ directories }}"
   - name: extract hyperkube
     raw: docker run --rm -v /opt/bin:/srv {{ hyperkube }} mv /hyperkube /srv/
