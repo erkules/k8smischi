@@ -1,0 +1,8 @@
+---
+# tasks file for k8s_python_raw
+
+
+- name: Write proxy-config for apt
+  raw:  echo 'Acquire::http::proxy "http://10.43.151.177:80";' | tee /etc/apt/apt.conf.d/80proxy
+- name: Install Python
+  raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)

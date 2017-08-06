@@ -13,9 +13,10 @@ spec:
     - apiserver
     - --etcd-servers=http://localhost:2379
     - --allow-privileged=true
-    - --service-cluster-ip-range= "{{ kubernetes_cluster_range }}"
+    - --service-cluster-ip-range={{ kubernetes_cluster_range }}
     - --insecure-bind-address=127.0.0.1
-    #- --advertise-address=165.227.72.245
+    - --advertise-address={{ ansible_eth1.ipv4.address }}
+    - --apiserver-count={{ apiserver_count }}
 
 #    - --bind-address=0.0.0.0
 #- --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota

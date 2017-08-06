@@ -5,6 +5,9 @@ pythonimage: "python:2-alpine"
 etcdimage:   "quay.io/coreos/etcd:v3.1.8"
 manifests:                                                                                                                                        
 - apiserver.pod
+- etcd.pod
+- controller.pod
+- scheduler.pod
 directories:                                                                                                                                      
 - /opt/bin
 - /etc/kubernetes/manifests
@@ -14,3 +17,5 @@ directories:
 etcd_discovery_token: "https://discovery.etcd.io/3107ab328565a830750e14e751fc4229"
 
 kubernetes_cluster_range: "10.30.10.0/24"
+kubernetes_apiserver_ip: "10.30.10.1"
+apiserver_count: 3

@@ -1,21 +1,21 @@
-- hosts: master
+- hosts: worker
   gather_facts: yes
   vars_files: 
   - vars.yml
 
   tasks:
-#j  - name: pull hyperkube
-#j    raw:  docker pull "{{ item  }}"
-#j    with_items:
-#j    - "{{ hyperkube }}"
-#j    - "{{ pythonimage }}"
-#j    - "{{ etcdimage }}"
-  - name: Create /opt/bin
-    raw:  mkdir -p "{{ item }}" || true
-    with_items: "{{ directories }}"
-  - name: extract hyperkube
-    raw: docker run --rm -v /opt/bin:/srv {{ hyperkube }} mv /hyperkube /srv/
-
+#  - name: pull hyperkube
+#    raw:  docker pull "{{ item  }}"
+#    with_items:
+#    - "{{ hyperkube }}"
+#    - "{{ pythonimage }}"
+#    - "{{ etcdimage }}"
+# - name: Create /opt/bin
+#    raw:  mkdir -p "{{ item }}" || true
+#    with_items: "{{ directories }}"
+#  - name: extract hyperkube
+#    raw: docker run --rm -v /opt/bin:/srv {{ hyperkube }} mv /hyperkube /srv/
+#
   - file:
       src: /opt/bin/hyperkube
       dest: /opt/bin/kubectl
@@ -23,10 +23,9 @@
 
 
   - name: Copy kubelet.service
-    template: 
-      src: kubelet.service.j2
+    copy: 
+      src: kubelet.service
       dest: /etc/systemd/system/kubelet.service 
-    tags: kubelet
 
   - name: Copy manifests templates
     template:  
@@ -36,7 +35,5 @@
     tags: test
 
   - command: systemctl daemon-reload
-    tags: kubelet
   - command: systemctl restart kubelet 
-    tags: kubelet
 

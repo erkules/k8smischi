@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: etcd
+spec:
+  hostNetwork: true
+  containers:
+  - name: etcd
+    image: quay.io/coreos/etcd:v3.1.8 
+    imagePullPolicy: Never
+    command:
+    - etcd
+    - "--name {{ inventory_hostname }}"
+    - "--data-dir /data/etcd"
+    - "--listen-client-urls http://127.0.0.1:2379,https://{{ ansible_host }}:2379"
+    - "--advertise-client-urls https://{{ ansible_host }}:2379"
+    - "--initial-cluster-state 'new' --initial-cluster  "{% for host in groups['etcd'] %}{{ hostvars[host]['inventory_hostname'] }}=https://{{ hostvars[host]['ansible_host'] }}:2380{% if not loop.last %},{% endif %}{% endfor %}"\
+                                              --cert-file /etc/k8s/cluster.pem --key-file /etc/k8s/cluster-key.pem --trusted-ca-file /etc/k8s/ca.pem --client-cert-auth \
+                                                            --initial-cluster-state 'new' --initial-cluster  "{% for host in groups['etcd'] %}{{ hostvars[host]['inventory_hostname'] }}=https://{{ hostvars[host]['ansible_host'] }}:2380{% if not loop.last %},{% endif %}{% endfor %}"\
+
+    - "--listen-peer-urls https://{{ ansible_eth0.ipv4_secondaries[0].address }}:2380
+    - "--initial-advertise-peer-urls https://{{ ansible_host }}:2380
+                                                                                                      --peer-cert-file /etc/k8s/cluster.pem  --peer-key-file /etc/k8s/cluster-key.pem  --peer-trusted-ca-file /etc/k8s/ca.pem
+
+

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir /opt
+mkdir /opt/bin
 curl http://downloads.activestate.com/ActivePython/releases/2.7.13.2714/ActivePython-2.7.13.2714-linux-x86_64-glibc-2.12-402178.tar.gz -o /opt/app.tar.gz
 
 cd /opt

@@ -1,0 +1,105 @@
+---
+# tasks file for kubernetes-ca-manager
+
+- name: Create lokal cert directory
+  file:
+    path:  "{{ playbook_dir }}/certs"
+    state: directory
+  delegate_to: 127.0.0.1
+
+- name: Create root CA key
+  command:   openssl genrsa -out ca-key.pem 4096
+  args:
+    chdir:   certs
+    creates: ca-key.pem
+  delegate_to: 127.0.0.1
+
+- name: Create the CA certificate
+  command:   openssl req -x509 -new -nodes -key ca-key.pem -days 1000 -out  ca.pem -subj "/CN=kube-ca"
+  args:
+    chdir:   certs
+    creates: ca.pem
+  delegate_to: 127.0.0.1
+- name: Copy Kubernetes API server openssl-config
+  template:
+    src: api-openssl.cnf.j2
+    dest: "{{ playbook_dir }}/certs/api-openssl.cnf"
+  delegate_to: 127.0.0.1
+
+- name: Create Kubernates API server key 
+  command:   openssl genrsa -out apiserver-key.pem 4096
+  args:
+    chdir:   certs
+    creates: apiserver-key.pem 
+  delegate_to: 127.0.0.1
+
+- name: Create Kubernetes API server csr
+  command:   openssl req -new -key apiserver-key.pem -out apiserver.csr 
+              -subj "/CN=kube-apiserver"
+              -config api-openssl.cnf
+  args:
+    chdir:   certs
+    creates: apiserver.csr
+  delegate_to: 127.0.0.1
+
+
+- name: Create Kubernetes API server certificate
+  command: openssl x509 -req -in apiserver.csr 
+             -CA    ca.pem
+             -CAkey ca-key.pem
+             -CAcreateserial
+             -out apiserver.pem
+             -days 500
+             -extensions v3_req
+             -extfile api-openssl.cnf
+  args:
+    chdir:   certs
+    creates: apiserver.pem
+  delegate_to: 127.0.0.1
+
+- name: Copy Kubernetes Minion/Worker openssl-config
+  template:
+    src:  worker-openssl.cnf.j2
+    dest: certs/worker-openssl.cnf
+  delegate_to: 127.0.0.1
+
+- name: Create Kubernetes Minion/Worker server key
+  command:   openssl genrsa -out "{{ hostvars[item]['inventory_hostname'] }}"-worker-key.pem 4096
+  args:
+    chdir:   certs
+    creates: "{{ hostvars[item]['inventory_hostname'] }}-worker-key.pem"
+  with_items: "{{ groups['worker'] }}"
+  delegate_to: 127.0.0.1
+
+- name: Create Kubernetes Minion/Worker server csr
+  command:   openssl req -new 
+              -key "{{ hostvars[item]['inventory_hostname'] }}-worker-key.pem"
+              -out "{{ hostvars[item]['inventory_hostname'] }}-worker-key.csr"
+              -subj "/CN=kube-apiserver"
+              -config worker-openssl.cnf
+  args:
+    chdir:   certs
+    creates: "{{ hostvars[item]['inventory_hostname'] }}-worker-key.csr"
+  environment:
+    WORKER_IP: "{{ hostvars[item]['ansible_ssh_host'] }}"
+  with_items: "{{ groups['worker'] }}"
+  delegate_to: 127.0.0.1
+
+- name: Create Kubernetes Minion/Worker server certificate 
+  command: openssl x509 -req
+            -in    "{{ hostvars[item]['inventory_hostname'] }}-worker-key.csr"
+            -CA    ca.pem
+            -CAkey ca-key.pem
+            -CAcreateserial
+            -out "{{ hostvars[item]['inventory_hostname'] }}-worker.pem"
+            -days 500
+            -extensions v3_req
+            -extfile worker-openssl.cnf
+  
+  args:
+    chdir:   certs
+    creates: "{{ hostvars[item]['inventory_hostname'] }}-worker.pem"
+  environment:
+    WORKER_IP: "{{ hostvars[item]['ansible_ssh_host'] }}"
+  with_items: "{{ groups['worker'] }}"
+  delegate_to: 127.0.0.1

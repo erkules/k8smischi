@@ -1,0 +1,36 @@
+- hosts: all
+  gather_facts: no
+  vars_files: 
+  - vars.yml
+
+  tasks:
+  - name: pull hyperkube
+    raw:  docker pull "{{ item  }}"
+    with_items:
+    - "{{ hyperkube }}"
+    - "{{ etcdimage }}"
+#  - name: install python TODO
+#    raw: scp scripts/python_inst.sh /tmp
+  - name: Create /opt/bin
+    file: 
+      dest: "{{ item }}"
+      state: directory
+    with_items: "{{ directories }}"
+  - name: extract hyperkube
+    raw: docker run --rm -v /opt/bin:/srv {{ hyperkube }} mv /hyperkube /srv/
+
+  - file:
+      src: /opt/bin/hyperkube
+      dest: /opt/bin/kubectl
+      state: link
+
+
+#  - name: Copy kubelet.service
+#    copy: 
+#      src: kubelet.service
+#      dest: /etc/systemd/system/kubelet.service 
+#
+#  - command: systemctl daemon-reload
+#  - command: systemctl restart kubelet 
+#  - command: systemctl enable kubelet 
+#

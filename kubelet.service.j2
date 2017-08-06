@@ -1,6 +1,7 @@
 [Service]
 ExecStartPre=-/usr/bin/mkdir -p /etc/kubernetes/manifests
 ExecStart=/opt/bin/hyperkube kubelet --pod-manifest-path /etc/kubernetes/manifests --allow-privileged true  \
+   --hostname-override={{ ansible_eth1.ipv4.address }} \
    --api-servers=http://127.0.0.1:8080 \
    --register-schedulable=false \
    --cni-conf-dir=/etc/kubernetes/cni/net.d \
