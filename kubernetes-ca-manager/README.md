@@ -14,7 +14,7 @@ Any pre-requisites that may not be covered by Ansible itself or the role should 
 Role Variables
 --------------
 
-k8s_service_ip  ServiceIPAddress des API-Servers
+kubernetes_apiserver_ip  ServiceIPAddress des API-Servers
 
 Dependencies
 ------------
