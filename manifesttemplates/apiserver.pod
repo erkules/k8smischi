@@ -15,7 +15,7 @@ spec:
     - --allow-privileged=true
     - --service-cluster-ip-range={{ kubernetes_cluster_range }}
     - --insecure-bind-address=127.0.0.1
-    - --advertise-address={{ ansible_eth1.ipv4.address }}
+    - --advertise-address={{ ansible_eth0.ipv4.address }}
     - --apiserver-count={{ apiserver_count }}
 
 #    - --bind-address=0.0.0.0

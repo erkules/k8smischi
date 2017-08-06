@@ -13,12 +13,11 @@ spec:
     - --name
     - {{ inventory_hostname }}
     - --data-dir=/data/etcd
-    - --listen-client-urls=http://127.0.0.1:2379,http://{{ ansible_eth1.ipv4.address }}:2379
+    - --listen-client-urls=http://127.0.0.1:2379,http://{{ ansible_eth0.ipv4.address }}:2379
     - --advertise-client-urls=http://{{ ansible_host }}:2379
-    - --listen-peer-urls=http://{{ ansible_eth1.ipv4.address }}:2380
-    - --initial-advertise-peer-urls=http://{{ ansible_eth1.ipv4.address }}:2380
+    - --listen-peer-urls=http://{{ ansible_eth0.ipv4.address }}:2380
+    - --initial-advertise-peer-urls=http://{{ ansible_eth0.ipv4.address }}:2380
     - --initial-cluster-state=new 
-    - --initial-cluster={% for host in groups['etcd'] %}{{ hostvars[host]['inventory_hostname'] }}=http://{{ hostvars[host]['ansible_eth1']['ipv4']['address'] }}:2380{% if not loop.last %},{% endif %}{% endfor %}
+    - --initial-cluster={% for host in groups['master'] %}{{ hostvars[host]['inventory_hostname'] }}=http://{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:2380{% if not loop.last %},{% endif %}{% endfor %}
 
 
-etcdmain: --initial-cluster must include master1=http://10.17.0.7:2380 given --initial-advertise-peer-urls=http://10.17.0.7:2380
