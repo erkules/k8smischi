@@ -39,7 +39,7 @@
     template:  
       src: manifesttemplates/{{ item }}
       dest: /etc/kubernetes/manifests/{{ item }}
-    with_items: "{{ manifests }}"
+    with_items: "{{ worker_manifests  }}"
     tags: test
 
   - command: systemctl daemon-reload
