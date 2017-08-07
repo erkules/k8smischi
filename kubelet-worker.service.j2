@@ -5,7 +5,6 @@ ExecStart=/opt/bin/hyperkube kubelet --pod-manifest-path /etc/kubernetes/manifes
    --api-servers={% for host in groups['master'] %}https://{{ hostvars[host]['ansible_ssh_host'] }}:6443{% if not loop.last %},{% endif %}{% endfor %} \
    --require-kubeconfig \
    --kubeconfig=/etc/kubernetes/ssl/kubeconfig.yml \
-   --register-schedulable=ture \
    --cni-conf-dir=/etc/kubernetes/cni/net.d \
    --container-runtime=docker \
    --allow-privileged=true \
