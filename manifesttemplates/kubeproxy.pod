@@ -12,7 +12,7 @@ spec:
     - /hyperkube
     - kube-proxy
     - --kubeconfig=/etc/kubernetes/ssl/kubeconfig.yml
-    - --master=https://{{ hostvars[groups['worker'][0]]['ansible_ssh_host'] }}:6443
+    - --master=https://{{ hostvars[groups['master'][0]]['ansible_ssh_host'] }}:6443
     securityContext:
       privileged: true
     volumeMounts:
