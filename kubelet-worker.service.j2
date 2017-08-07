@@ -3,7 +3,7 @@ ExecStartPre=-/usr/bin/mkdir -p /etc/kubernetes/manifests
 ExecStart=/opt/bin/hyperkube kubelet --pod-manifest-path /etc/kubernetes/manifests --allow-privileged true  \
    --hostname-override={{ ansible_eth0.ipv4.address }} \
    --require-kubeconfig
-   --kubeconfig=/etc/kubernetes/kubeconfig.yml
+   --kubeconfig=/etc/kubernetes/ssl/kubeconfig.yml
    --register-schedulable=ture \
    --cni-conf-dir=/etc/kubernetes/cni/net.d \
    --container-runtime=docker \

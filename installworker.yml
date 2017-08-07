@@ -26,8 +26,12 @@
       dest: "/etc/kubernetes/ssl/{{ item }}"
     with_items:
     - ca.pem
-    - "{{ hostvars['inventory_hostname'] }}-worker-key,pem"
-    - "{{ hostvars['inventory_hostname'] }}-worker.pem"
+    - "{{ inventory_hostname }}-worker-key.pem"
+    - "{{ inventory_hostname }}-worker.pem"
+  - name: Install kubconfig
+      src:  kubeconfig.yml.j2
+      dest: /etc/kubernetes/ssl/kubeconfig.yml
+
 
   - name: Copy kubelet.service
     template: 
