@@ -8,6 +8,9 @@ manifests:
 - etcd.pod
 - controller.pod
 - scheduler.pod
+worker_manifests:
+- kubeproxy.pod
+
 directories:                                                                                                                                      
 - /opt/bin
 - /etc/kubernetes/

@@ -1,0 +1,49 @@
+- hosts: worker
+  gather_facts: yes
+  vars_files: 
+  - vars.yml
+
+  tasks:
+  - name: pull hyperkube
+    raw:  docker pull "{{ item  }}"
+    with_items:
+    - "{{ hyperkube }}"
+  - name: Create directories for Kubernetes Kubelet
+    file:
+      dest: "{{ item }}"
+      state: directory
+    with_items: "{{ directories }}"
+  - name: extract hyperkube
+    raw: docker run --rm -v /opt/bin:/srv {{ hyperkube }} mv /hyperkube /srv/
+
+  - file:
+      src: /opt/bin/hyperkube
+      dest: /opt/bin/kubectl
+      state: link
+  - name: Install Certs
+    copy: 
+      src: "certs/{{ item }}"
+      dest: "/etc/kubernetes/ssl/{{ item }}"
+    with_items:
+    - ca.pem
+    - "{{ hostvars['inventory_hostname'] }}-worker-key,pem"
+    - "{{ hostvars['inventory_hostname'] }}-worker.pem"
+
+  - name: Copy kubelet.service
+    template: 
+      src: kubelet-worker.service.j2
+      dest: /etc/systemd/system/kubelet.service 
+    tags: kubelet
+
+  - name: Copy manifests templates
+    template:  
+      src: manifesttemplates/{{ item }}
+      dest: /etc/kubernetes/manifests/{{ item }}
+    with_items: "{{ manifests }}"
+    tags: test
+
+  - command: systemctl daemon-reload
+    tags: kubelet
+  - command: systemctl restart kubelet 
+    tags: kubelet
+
