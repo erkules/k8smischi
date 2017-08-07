@@ -2,7 +2,7 @@
 ExecStartPre=-/usr/bin/mkdir -p /etc/kubernetes/manifests
 ExecStart=/opt/bin/hyperkube kubelet --pod-manifest-path /etc/kubernetes/manifests --allow-privileged true  \
    --hostname-override={{ ansible_eth0.ipv4.address }} \
-   --api-server={% for host in groups['master'] %}https://{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:6443{% if not loop.last %},{% endif %}{% endfor %} \
+   --api-server={% for host in groups['master'] %}https://{{ hostvars[host]['ansible_ssh_host'] }}:6443{% if not loop.last %},{% endif %}{% endfor %} \
    --require-kubeconfig \
    --kubeconfig=/etc/kubernetes/ssl/kubeconfig.yml \
    --register-schedulable=ture \
