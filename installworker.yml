@@ -29,9 +29,9 @@
     - "{{ inventory_hostname }}-worker-key.pem"
     - "{{ inventory_hostname }}-worker.pem"
   - name: Install kubconfig
-      template:
-        src:  kubeconfig.yml.j2
-        dest: /etc/kubernetes/ssl/kubeconfig.yml
+    template:
+      src:  kubeconfig.yml.j2
+      dest: /etc/kubernetes/ssl/kubeconfig.yml
 
 
   - name: Copy kubelet.service
