@@ -9,6 +9,7 @@ ExecStart=/opt/bin/hyperkube kubelet --pod-manifest-path /etc/kubernetes/manifes
    --allow-privileged=true \
    --cluster_dns={{ kubernetes_dns_ip }} \
    --cluster_domain=cluster.local \
+   --network-plugin=cni \
    --pod-manifest-path=/etc/kubernetes/manifests 
  #  --network-plugin=${NETWORK_PLUGIN} \
   # --hostname-override=${ADVERTISE_IP} \
