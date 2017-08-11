@@ -1,0 +1,16 @@
+- hosts: localhost
+  gather_facts: no
+  roles:
+  - { role: roles/kubernetes-ca-manager, tags: ca }
+- hosts: all
+  gather_facts: no
+  roles:
+  - { role: roles/k8s_python_raw }
+- hosts: all
+  gather_facts: yes
+  roles:
+  - { role: roles/docker         }
+
+- include: installkubelet.yml
+- include: installworker.yml
+
