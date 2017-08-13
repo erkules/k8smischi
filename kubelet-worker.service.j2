@@ -1,4 +1,7 @@
 [Service]
+Environment="HTTP_PROXY=http://10.43.151.177:80"
+Environment="HTTPS_PROXY=http://10.43.151.177:80"
+Environment="NO_PROXY=localhost, *.eu-central-1.compute.internal, .eu-central-1.compute.internal ,{% for host in groups['nodes'] %}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}{% if not loop.last %},{% endif %}{% endfor %}"
 ExecStartPre=-/usr/bin/mkdir -p /etc/kubernetes/manifests
 ExecStart=/opt/bin/hyperkube kubelet --pod-manifest-path /etc/kubernetes/manifests --allow-privileged true  \
    --hostname-override={{ ansible_eth0.ipv4.address }} \
@@ -10,9 +13,9 @@ ExecStart=/opt/bin/hyperkube kubelet --pod-manifest-path /etc/kubernetes/manifes
    --allow-privileged=true \
    --cluster_dns={{ kubernetes_dns_ip }} \
    --cluster_domain=cluster.local \
-   --network-plugin=cni \
    --cloud-provider=aws \
    --pod-manifest-path=/etc/kubernetes/manifests 
+#   --network-plugin=cni \
  #  --network-plugin=${NETWORK_PLUGIN} \
   # --hostname-override=${ADVERTISE_IP} \
 Restart=always

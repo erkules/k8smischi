@@ -29,6 +29,11 @@
     - ca.pem
     - apiserver.pem
     - apiserver-key.pem
+  - name: Install kubconfig
+    template:
+      src:  kubeconfig_master.yml.j2
+      dest: /etc/kubernetes/ssl/kubeconfig.yml
+
 
   - name: Copy kubelet.service
     template: 
