@@ -16,7 +16,7 @@
   - name: extract hyperkube
     raw: docker run --rm -v /usr/local/bin:/srv {{ hyperkube }} mv /hyperkube /srv/
   - name: extract cni-plugin-binaries
-    raw: docker run --rm -v /opt/cni/bin:/srv -w /opt/cni/bin  {{ hyperkube }} sh -c 'cp * /srv
+    raw: docker run --rm -v /opt/cni/bin:/srv -w /opt/cni/bin  {{ hyperkube }} sh -c 'cp * /srv'
 
   - file:
       src: /usr/local/bin/hyperkube
