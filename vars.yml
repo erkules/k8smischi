@@ -8,6 +8,7 @@ manifests:
 - etcd.pod
 - controller.pod
 - scheduler.pod
+- kubeproxy.pod
 worker_manifests:
 - kubeproxy.pod
 
