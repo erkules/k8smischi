@@ -75,8 +75,7 @@
   command:   openssl req -new 
               -key "{{ hostvars[item]['inventory_hostname'] }}-worker-key.pem"
               -out "{{ hostvars[item]['inventory_hostname'] }}-worker-key.csr"
-              -subj "/CN=kube-apiserver"
-              -subj "/CN={{ hostvars[item]['inventory_hostname'] }}/O=kubelet"
+              -subj "/CN=system:nodes:{{ hostvars[item]['inventory_hostname'] }}/O=system:nodes"
               -config worker-openssl.cnf
   args:
     chdir:   certs
