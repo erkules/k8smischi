@@ -17,6 +17,7 @@ spec:
     - --root-ca-file=/etc/kubernetes/ssl/ca.pem
     - --cluster-cidr={{ kubernetes_cluster_cidr }}
     - --allocate-node-cidrs=true
+    - --enable-dynamic-provisioning=true
     resources:
       requests:
         cpu: 200m

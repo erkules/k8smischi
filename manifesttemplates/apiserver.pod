@@ -22,7 +22,8 @@ spec:
     - --client-ca-file=/etc/kubernetes/ssl/ca.pem
     - --bind-address=0.0.0.0
     - --service-account-key-file=/etc/kubernetes/ssl/apiserver-key.pem
-    - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota
+    - --authorization-mode=RBAC
+    - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota,DefaultTolerationSeconds,PersistentVolumeLabel
 #- --anonymous-auth false
 #    - --secure-port=443
 #    - --insecure-port 8080
