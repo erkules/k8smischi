@@ -4,3 +4,4 @@
   template:
     src: "{{ item }}"
     dest: "/tmp/{{ item }}"
+  with_items: {{ k8s-addons }}  
