@@ -76,6 +76,7 @@
               -key "{{ hostvars[item]['inventory_hostname'] }}-worker-key.pem"
               -out "{{ hostvars[item]['inventory_hostname'] }}-worker-key.csr"
               -subj "/CN=kube-apiserver"
+              -subj "/CN={{ hostvars[item]['inventory_hostname'] }}/O=kubelet"
               -config worker-openssl.cnf
   args:
     chdir:   certs
