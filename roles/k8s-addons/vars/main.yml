@@ -1,0 +1,5 @@
+---
+# vars file for k8s-addons
+k8s-addons:
+  - aws-storageclass.yml
+  - kube-flannel.yml

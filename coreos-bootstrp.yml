@@ -11,17 +11,17 @@
     - "{{ etcdimage }}"
 #  - name: install python TODO
 #    raw: scp scripts/python_inst.sh /tmp
-  - name: Create /opt/bin
+  - name: Create /usr/local/bin
     file: 
       dest: "{{ item }}"
       state: directory
     with_items: "{{ directories }}"
   - name: extract hyperkube
-    raw: docker run --rm -v /opt/bin:/srv {{ hyperkube }} mv /hyperkube /srv/
+    raw: docker run --rm -v /usr/local/bin:/srv {{ hyperkube }} mv /hyperkube /srv/
 
   - file:
-      src: /opt/bin/hyperkube
-      dest: /opt/bin/kubectl
+      src: /usr/local/bin/hyperkube
+      dest: /usr/local/bin/kubectl
       state: link
 
 

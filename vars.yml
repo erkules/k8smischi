@@ -12,7 +12,7 @@ worker_manifests:
 - kubeproxy.pod
 
 directories:                                                                                                                                      
-- /opt/bin
+- /usr/local/bin
 - /etc/kubernetes/
 - /etc/kubernetes/manifests
 - /etc/kubernetes/ssl/
