@@ -1,5 +1,6 @@
 ---
 # tasks file for k8s-addons
 - name: Copy templates
-  src: "{{ item }}"
-  dest: "/tmp/{{ item }}"
+  template:
+    src: "{{ item }}"
+    dest: "/tmp/{{ item }}"
